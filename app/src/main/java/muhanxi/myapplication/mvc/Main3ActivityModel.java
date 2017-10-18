@@ -8,7 +8,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-import static android.os.Build.VERSION_CODES.O;
 
 /**
  * Created by muhanxi on 17/9/28.

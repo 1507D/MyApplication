@@ -39,6 +39,11 @@ public class Main4Activity extends Activity implements LoginView {
             }
         });
 
+        // m v p
+//        v activity
+//        p present
+//         m module
+
 
     }
 

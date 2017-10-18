@@ -2,13 +2,27 @@ package muhanxi.myapplication;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
+
+
+import com.orhanobut.logger.Logger;
+import com.tencent.bugly.crashreport.CrashReport;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -18,15 +32,24 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import muhanxi.myapplication.cookie.CookiesManager;
+import muhanxi.myapplication.event.Event1507;
+import muhanxi.myapplication.event.MessageEvent;
 import muhanxi.myapplication.mvc.Main3Activity;
 import muhanxi.myapplication.mvp.Main4Activity;
+import muhanxi.myapplication.retrofit.RetrofitActivity;
 import okhttp3.Cache;
 import okhttp3.CacheControl;
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.Cookie;
+import okhttp3.CookieJar;
 import okhttp3.FormBody;
+import okhttp3.HttpUrl;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
@@ -35,24 +58,48 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
-import static android.os.Build.VERSION_CODES.O;
-import static java.nio.file.attribute.AclEntry.newBuilder;
-
 public class MainActivity extends Activity {
 
+    Button button ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
 
+        if(!EventBus.getDefault().isRegistered(this)){
+            EventBus.getDefault().register(this);
+        }
+
+        startService(new Intent(this,IService.class));
 
         findViewById(R.id.photo).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                toPhoto();
+//                toPhoto();
+
+//                button.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//
+//                    }
+//                });
+
+
+//                CrashReport.testJavaCrash();
+                Logger.d("hello d");
+                Logger.e("hello e");
+                Logger.i("hello i");
+                Logger.v("hello v");
+                Logger.w("hello w");
+
+
+
+
+                start();
+//                Log.e()
+
             }
         });
 
@@ -61,7 +108,9 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View view) {
 
-                toCamera();
+//                toCamera();
+//                readActivityMeta();
+                synchronousMethod();
             }
         });
 
@@ -69,7 +118,7 @@ public class MainActivity extends Activity {
 
 //        cache();
 
-        startActivity(new Intent(this, Main4Activity.class));
+//        startActivity(new Intent(this, Main4Activity.class));
 
 //        synchronousMethod();
 
@@ -77,9 +126,41 @@ public class MainActivity extends Activity {
 
 //        postString();
 
+
+
     }
 
 
+    public void start(){
+        startActivity(new Intent(this,RetrofitActivity.class));
+    }
+
+
+    //订阅
+//    ThreadMode.MAIN 订阅的方法 执行的主线程
+    @Subscribe(threadMode = ThreadMode.POSTING , sticky = false)
+    public void onMessageEvent(Event1507 event){
+
+        System.out.println("Thread.currentThread().getName() = " + Thread.currentThread().getName());
+        System.out.println("event = MainActivity "  + event.toString());
+    }
+
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putString("key","value");
+    }
+
+    OkHttpClient client ;
+    List<Cookie> cookie ;
     public void synchronousMethod(){
 
 
@@ -89,10 +170,33 @@ public class MainActivity extends Activity {
 
 
                 try {
-                    OkHttpClient client = new OkHttpClient();
+                    if(client == null){
+                        client = new OkHttpClient.Builder()
+                                .cookieJar(new CookiesManager(getApplicationContext())).build();
+//                        client = new OkHttpClient.Builder()
+//                                .cookieJar(new CookieJar() {
+//                                    @Override
+//                                    public void saveFromResponse(HttpUrl url, List<Cookie> cookies) {
+//                                        cookie = cookies;
+//
+//                                        System.out.println("saveFromResponse url = " + url);
+//                                        System.out.println("saveFromResponse cookies = " + cookies);
+//
+//                                    }
+//
+//                                    @Override
+//                                    public List<Cookie> loadForRequest(HttpUrl url) {
+//                                        List<Cookie> list = new ArrayList<Cookie>();
+//                                        System.out.println("loadForRequest url = " + url);
+//
+//                                        return cookie == null ? list : cookie;
+//                                    }
+//                                }).build();
+
+                    }
 
 
-                    Request request = new Request.Builder().url("https://publicobject.com/helloworld.txt").build();
+                    Request request = new Request.Builder().url("http://192.168.23.182:8080/Bwei/login").build();
 
 
                     Call call =  client.newCall(request);
@@ -639,6 +743,78 @@ public class MainActivity extends Activity {
 
 
     }
+
+//
+//
+//    //微信支付
+//    public void payWx(){
+//        IWXAPI msgApi = WXAPIFactory.createWXAPI(this, null);
+//        msgApi.registerApp("wxd930ea5d5a258f4f");
+//
+//
+////        IWXAPI api;
+//        PayReq request = new PayReq();
+//        request.appId = "wxd930ea5d5a258f4f";
+//        request.partnerId = "1900000109";
+//        request.prepayId= "1101000000140415649af9fc314aa427";
+//        request.packageValue = "Sign=WXPay";
+//        request.nonceStr= "1101000000140429eb40476f8896f4c9";
+//        request.timeStamp= "1398746574";
+//        request.sign= "7FFECB600D7157C5AA49810D2D8F28BC2811827B";
+//        msgApi.sendReq(request);
+//
+//
+//
+//    }
+
+
+    public void readApplicationMeta(){
+
+        try {
+            ApplicationInfo appInfo = getPackageManager().getApplicationInfo(getPackageName(), PackageManager.GET_META_DATA);
+
+            int msg=appInfo.metaData.getInt("BUGLY_APPID");
+            Toast.makeText(this, ""+msg, Toast.LENGTH_SHORT).show();
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+//    http://blog.csdn.net/xx326664162/article/details/50727941
+    public void readActivityMeta(){
+
+        try {
+            ActivityInfo info=getPackageManager()
+                    .getActivityInfo(getComponentName(),
+                            PackageManager.GET_META_DATA);
+            String msg =info.metaData.getString("data_Name");
+            Toast.makeText(this, ""+msg, Toast.LENGTH_SHORT).show();
+
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
+
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
+
+
+
+
+
+
+
+
+
+
 
 
 

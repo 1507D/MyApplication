@@ -51,7 +51,7 @@ String username = editTextName.getText().toString().trim() ;
                 model.login(username,password);
 
 
-
+// mvc
 
             }
         });
