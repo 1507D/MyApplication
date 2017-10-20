@@ -15,7 +15,7 @@
           "color": "黑色",
           "size": "18L",
           "price": 20,
-          "count":2
+          "count":1
         },
         {
           "id": 2,
@@ -27,7 +27,7 @@
           "color": "白色",
           "size": "20XXL",
           "price": 148,
-          "count": 3
+          "count": 1
         }
       ]
     }

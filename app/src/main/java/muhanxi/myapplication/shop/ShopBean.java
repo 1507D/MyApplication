@@ -94,7 +94,7 @@ public class ShopBean {
             private int count;
 
             //商品是否被选中
-            private boolean isSelect = true;
+            private boolean isSelect = false;
             //是否是第一个 如果isfirst 等于1 显示商户的名称， 否则隐藏商户的名称
             private int isFirst = 2;
             //商户是否被选中

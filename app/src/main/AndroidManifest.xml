@@ -34,7 +34,7 @@
             android:name="BUGLY_ENABLE_DEBUG"
             android:value="isDebug" />
 
-        <activity android:name=".shop.ShopActivity">
+        <activity android:name=".shops.ShopActivity" android:windowSoftInputMode="stateHidden">
             <meta-data
                 android:name="data_Name"
                 android:value="hello my activity" />
@@ -60,6 +60,7 @@
         <activity android:name=".Main6Activity" />
         <activity android:name=".retrofit.RetrofitActivity" />
         <activity android:name=".butterknife.ButterKnifeActivity" />
+        <activity android:name=".shop.KaoshiShopActivty" />
     </application>
 
 </manifest>
