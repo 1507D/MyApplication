@@ -67,7 +67,7 @@ public class CustomView extends LinearLayout {
             @Override
             public void onClick(View v) {
                 String  result =   content.getText().toString().trim() ;
-                int integerResult =  Integer.valueOf(result);
+                int integerResult =  Integer.valueOf(result) ;
                 integerResult = integerResult + 1 ;
                 content.setText(integerResult+"");
                 if(listener != null){

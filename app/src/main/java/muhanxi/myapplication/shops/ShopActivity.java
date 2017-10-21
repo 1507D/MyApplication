@@ -115,26 +115,23 @@ public class ShopActivity extends Activity {
 
       boolean check =   checkAll.isChecked() ;
 
-        if(check){
 
             float price  = 0 ;
 
             for (int i = 0; i < list.size(); i++) {
-                list.get(i).setSelect(true);
-                adapter.notifyDataSetChanged();
-
-                if (list.get(i).isSelect()) {
-                    price += list.get(i).getPrice() * list.get(i).getCount();
-
+                list.get(i).setSelect(check);
+                if(check){
+                    if (list.get(i).isSelect()) {
+                        price += list.get(i).getPrice() * list.get(i).getCount();
+                    }
                 }
-
-
             }
+            adapter.notifyDataSetChanged();
 
             allprice.setText(price+"元");
 
 
-        }
+
 
 
 

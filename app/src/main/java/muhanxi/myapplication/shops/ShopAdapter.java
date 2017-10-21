@@ -62,17 +62,31 @@ public class ShopAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
             viewHolder.textView.setText(list.get(position).getPrice()+"");
 
-            viewHolder.checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-                    list.get(position).setSelect(isChecked);
+            viewHolder.checkbox.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    boolean isChecked = list.get(position).isSelect() ;
+
+                    list.get(position).setSelect(!isChecked);
                     notifyDataSetChanged();
                     if(listener != null){
-                        listener.check(isChecked,position);
+                        listener.check(!isChecked,position);
                     }
+
                 }
             });
+//
+//
+//            viewHolder.checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//                @Override
+//                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//
+//
+//                }
+//            });
+
 
 
             viewHolder.customviewid.setListener(new CustomView.ChangeListener() {
